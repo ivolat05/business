@@ -19,6 +19,18 @@ $(function () {
 			"title": "Эта площадка слишком большая и дорогая.",
 			"text": 'Попробуйте выбрать другое место для открытия кофейни.',
 		},
+		"marketing-good-error": {
+			"title": "Ой, это неверный вариант!",
+			"text": ' Если не знаете, что выбрать, можете заглянуть в справочник.',
+		},
+		"unique-good-error": {
+			"title": "У Дмитрия не хватит бюджета,",
+			"text": 'чтобы нанять такого специалиста и купить оборудование для обжарки и фасовки кофейных зёрен. Выберите что-то другое.',
+		},
+		"name-good-error": {
+			"title": "Ой, это неверный вариант!",
+			"text": 'Так уже называется заведение конкурента.',
+		},
 	}
 	// начальный экран
 	function start() {
@@ -57,6 +69,9 @@ $(function () {
 		let mapBtnRow = document.querySelector('.map-btn');
 		let mapRow = document.querySelector('.map-row');
 		let mapLabelInput = document.querySelectorAll('.map-label-input');
+		let choiceBtn = document.querySelectorAll('.choice-btn');
+		let bisinessFooterBtn = document.querySelector('.bisiness-footer-btn');
+
 		// выбор типа
 		cofeBtn.forEach(item => {
 			item.addEventListener('click', () => {
@@ -72,7 +87,9 @@ $(function () {
 
 					id.classList.add('--active');
 					counter += 1;
-					console.log(counter)
+					if (counter == 8) {
+						bisinessFooterBtn.classList.add('--active')
+					}
 				} else {
 					buttonError(listError['cofe-error']['title'], listError['cofe-error']['text'])
 				}
@@ -118,7 +135,9 @@ $(function () {
 								idDataFinish.classList.add('finish')
 								idClass.classList.add('--active')
 								counter += 1;
-								console.log(counter)
+								if (counter == 8) {
+									bisinessFooterBtn.classList.add('--active')
+								}
 							}
 							indecator = 0;
 							break
@@ -166,7 +185,9 @@ $(function () {
 					deletStatError()
 					if (mapCompare === mapSize) {
 						counter += 1;
-						console.log(counter);
+						if (counter == 8) {
+							bisinessFooterBtn.classList.add('--active')
+						}
 						mapBtnRow.innerHTML = 'Выбрано';
 						mapBtnRow.classList.add('map-deactive')
 					} else {
@@ -176,9 +197,48 @@ $(function () {
 			})
 		})
 
+		// выбор логзунгов
+		choiceBtn.forEach(item => {
+			item.addEventListener('click', () => {
+				let dataType = item.getAttribute('data-type');
+				let listChoice = document.querySelectorAll(`.${dataType}`);
+				listChoice.forEach(item => {
+					if (item.checked) {
+						let choiceSize = item.getAttribute('data-size');
+						let choiceCompare = item.getAttribute('data-compare');
+						deletStatError()
+						if (choiceSize === choiceCompare) {
+							let btnChoiceDeactive = document.querySelector(`.${dataType}-btns`);
+							let labelChoiceDeactive = document.querySelectorAll(`.${dataType}-label`);
+							labelChoiceDeactive.forEach(event => {
+								event.classList.add("--choise-deactive")
+							})
+							counter += 1;
+							if (counter == 8) {
+								bisinessFooterBtn.classList.add('--active')
+							}
+
+							listChoice.forEach(event => {
+								if (event.classList.contains('choise-error')) {
+									event.classList.remove('choise-error');
+								}
+							})
+							item.parentElement.classList.remove('--choise-deactive');
+							item.classList.add('choise-active');
+							btnChoiceDeactive.classList.add('choise-btn-deactive')
+							btnChoiceDeactive.innerHTML = 'Готово'
+						} else {
+							item.classList.add('choise-error');
+							buttonError(listError[`${choiceSize}-error`]['title'], listError[`${choiceSize}-error`]['text'])
+						}
+					}
+				})
+			})
+		})
 	}
 
 	businessGame()
+
 
 	function timer() {
 		let minut = 20;
