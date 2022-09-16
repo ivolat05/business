@@ -190,6 +190,9 @@ $(function () {
 						}
 						mapBtnRow.innerHTML = 'Выбрано';
 						mapBtnRow.classList.add('map-deactive')
+						mapBtn.forEach(event => {
+							event.classList.add('-deactive');
+						})
 					} else {
 						buttonError(listError['map-error']['title'], listError['map-error']['text'])
 					}
