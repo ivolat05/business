@@ -11,6 +11,10 @@ $(function () {
 			"title": "Это неправильный вариант. ",
 			"text": 'Ориентируйтесь на бюджет и цели бизнеса. На всякий можете заглянуть в справочник',
 		},
+		"catalog-error": {
+			"title": "Это неправильный вариант. ",
+			"text": ' Загляните в справочник, если не получается выбрать правильный ответ.',
+		},
 	}
 	// начальный экран
 	function start() {
@@ -44,6 +48,7 @@ $(function () {
 	function businessGame() {
 		let counter = 0;
 		let cofeBtn = document.querySelectorAll('.cofe-btn');
+		let categoryBox = document.querySelectorAll('.category-box');
 		// выбор типа
 		cofeBtn.forEach(item => {
 			item.addEventListener('click', () => {
@@ -62,6 +67,60 @@ $(function () {
 					console.log(counter)
 				} else {
 					buttonError(listError['cofe-error']['title'], listError['cofe-error']['text'])
+				}
+			})
+		})
+		categoryBox.forEach(item => {
+			item.addEventListener('click', () => {
+				let dataBlock = item.getAttribute('data-block')
+				let blockClass = document.querySelectorAll(`.${dataBlock}`)
+				let indecator = 0;
+
+
+				for (let x = 0; x < blockClass.length; x++) {
+					if (blockClass[x].classList.contains('--active')) {
+						let dataCompare = blockClass[x].getAttribute('data-compare');
+						deletStatError()
+						if (dataCompare === dataBlock) {
+
+							let text = blockClass[x].innerHTML;
+							let blockText = document.querySelectorAll(`.${dataCompare}-text`);
+							for (let i = 0; i < blockText.length; i++) {
+								if (blockText[i].innerHTML == '...') {
+									blockText[i].innerHTML = text;
+									break
+								}
+							}
+							blockClass[x].remove();
+							let dataIndecator = item.getAttribute('data-indecator');
+							let addClass = document.querySelectorAll(`.${dataIndecator}`);
+
+							if (addClass[0]) {
+								addClass[0].classList.add('--active');
+							} else {
+								let idClass = document.getElementById(dataIndecator);
+								let idData = idClass.getAttribute('data-finish');
+								let idDataFinish = document.getElementById(idData);
+								let btnBlocked = document.querySelectorAll(`.${dataIndecator}-btn`);
+								btnBlocked.forEach(item => {
+									item.classList.add('-deactive')
+								})
+								idDataFinish.classList.add('finish')
+								idClass.classList.add('--active')
+								counter += 1;
+								console.log(counter)
+							}
+							indecator = 0;
+							break
+						}
+					} else {
+						indecator += 1;
+
+					}
+				}
+				if (indecator > 0) {
+					buttonError(listError['catalog-error']['title'], listError['catalog-error']['text'])
+					indecator = 0
 				}
 			})
 		})
@@ -122,12 +181,10 @@ $(function () {
 			<img src="./img/push/push-error.svg" alt="" class="push-img">
 		</div>
 		<div class="push-coll">
-			<div class="push-title">
+			<span class="push-title">
 				${title}
-			</div>
-			<div class="push-text">
+			</span>
 				${text}
-			</div>
 		</div>
 		`
 		mainWrappBox.appendChild(element);
