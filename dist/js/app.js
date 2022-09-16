@@ -102,8 +102,12 @@ $(function () {
 								let idData = idClass.getAttribute('data-finish');
 								let idDataFinish = document.getElementById(idData);
 								let btnBlocked = document.querySelectorAll(`.${dataIndecator}-btn`);
+								let textBlocked = document.querySelectorAll(`.${dataIndecator}-text`)
 								btnBlocked.forEach(item => {
 									item.classList.add('-deactive')
+								})
+								textBlocked.forEach(item => {
+									item.style.opacity = '0'
 								})
 								idDataFinish.classList.add('finish')
 								idClass.classList.add('--active')
